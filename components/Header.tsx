@@ -50,6 +50,12 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange, onLogout }) 
           >
             Chuyển Đổi Chữ
           </NavButton>
+          <NavButton
+            isActive={currentPage === Page.ImageCombiner}
+            onClick={() => onPageChange(Page.ImageCombiner)}
+          >
+            Ghép Ảnh
+          </NavButton>
           <button
             onClick={onLogout}
             className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500 bg-red-800/50 text-red-300 hover:bg-red-800 whitespace-nowrap"

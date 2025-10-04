@@ -6,6 +6,7 @@ import Header from './components/Header';
 import CrimeAnalysisPage from './components/CrimeAnalysisPage';
 import CaseConverterPage from './components/CaseConverterPage';
 import ApiKeyEntryPage from './components/ApiKeyEntryPage';
+import ImageCombinerPage from './components/ImageCombinerPage';
 
 
 const App: React.FC = () => {
@@ -72,6 +73,9 @@ const App: React.FC = () => {
               inputText={converterInput}
               setInputText={setConverterInput}
             />
+          )}
+          {currentPage === Page.ImageCombiner && (
+            <ImageCombinerPage />
           )}
         </div>
       </main>

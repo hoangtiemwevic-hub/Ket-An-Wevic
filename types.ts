@@ -1,5 +1,4 @@
 
-
 // Fix: Moved the Crime interface here from geminiService.ts to serve as a single source of truth for types.
 export interface Crime {
   subject: string;
@@ -10,6 +9,7 @@ export interface Crime {
 export enum Page {
   CrimeAnalysis = 'CRIME_ANALYSIS',
   CaseConverter = 'CASE_CONVERTER',
+  ImageCombiner = 'IMAGE_COMBINER',
 }
 
 export interface HistoryEntry {

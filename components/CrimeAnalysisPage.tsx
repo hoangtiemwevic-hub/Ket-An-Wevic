@@ -103,7 +103,11 @@ const CrimeAnalysisPage: React.FC<CrimeAnalysisPageProps> = ({
         onHistoryAdd({ inputText, result: analysisResult });
       }
     } catch (err) {
-      setError('Đã xảy ra lỗi khi phân tích. Vui lòng thử lại.');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Đã xảy ra lỗi không xác định khi phân tích. Vui lòng thử lại.');
+      }
       console.error(err);
     } finally {
       if (progressIntervalRef.current) {
