@@ -1,4 +1,3 @@
-
 import { Crime } from "../types";
 
 export async function analyzeCrimeText(text: string, apiKey: string): Promise<Crime[]> {
@@ -27,5 +26,28 @@ export async function analyzeCrimeText(text: string, apiKey: string): Promise<Cr
         throw new Error(error.message);
     }
     throw new Error("An unknown error occurred while fetching analysis.");
+  }
+}
+
+export async function validateApiKey(apiKey: string): Promise<void> {
+  try {
+    const response = await fetch('/api/validate-key', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ apiKey }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || 'Failed to validate API key. The server responded with an error.');
+    }
+  } catch (error) {
+    console.error("Error validating API key:", error);
+    if (error instanceof Error) {
+      throw error; // Re-throw the specific error message
+    }
+    throw new Error("An unknown error occurred during API key validation.");
   }
 }

@@ -1,5 +1,6 @@
-
 import React, { useState } from 'react';
+import { validateApiKey } from '../services/geminiService';
+import Spinner from './common/Spinner';
 
 interface ApiKeyEntryPageProps {
   onApiKeySubmit: (apiKey: string) => void;
@@ -8,15 +9,29 @@ interface ApiKeyEntryPageProps {
 const ApiKeyEntryPage: React.FC<ApiKeyEntryPageProps> = ({ onApiKeySubmit }) => {
   const [apiKey, setApiKey] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!apiKey.trim()) {
       setError('Vui lòng nhập một API key.');
       return;
     }
     setError('');
-    onApiKeySubmit(apiKey.trim());
+    setIsLoading(true);
+
+    try {
+      await validateApiKey(apiKey.trim());
+      onApiKeySubmit(apiKey.trim());
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Đã xảy ra lỗi không xác định khi xác thực key.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -42,15 +57,17 @@ const ApiKeyEntryPage: React.FC<ApiKeyEntryPageProps> = ({ onApiKeySubmit }) => 
               placeholder="••••••••••••••••••••"
               className="w-full p-3 bg-gray-900 border-2 border-gray-700 rounded-md text-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors duration-200"
               aria-label="Gemini API Key Input"
+              disabled={isLoading}
             />
           </div>
           {error && <p className="text-red-400 text-sm text-center">{error}</p>}
           <div>
             <button
               type="submit"
-              className="w-full px-6 py-3 bg-teal-600 text-white font-semibold rounded-md hover:bg-teal-700 disabled:bg-gray-600 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-500"
+              className="w-full flex items-center justify-center px-6 py-3 bg-teal-600 text-white font-semibold rounded-md hover:bg-teal-700 disabled:bg-gray-600 disabled:cursor-wait transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-500"
+              disabled={isLoading}
             >
-              Tiếp tục
+              {isLoading ? <Spinner /> : 'Tiếp tục'}
             </button>
           </div>
         </form>
