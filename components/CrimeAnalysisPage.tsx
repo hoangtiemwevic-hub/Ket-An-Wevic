@@ -46,7 +46,7 @@ const CrimeAnalysisPage: React.FC<CrimeAnalysisPageProps> = ({
   const progressIntervalRef = useRef<number | null>(null);
 
   const groupedResults = useMemo(() => {
-    // FIX: Add Array.isArray check to safely handle the result prop.
+    // Fix: Add Array.isArray check to safely handle the result prop. This prevents runtime errors on 'reduce' if 'result' is not an array.
     if (!result || !Array.isArray(result) || result.length === 0) return {};
     return result.reduce((acc, crime) => {
       const subject = crime.subject || 'Unspecified';
@@ -170,7 +170,7 @@ const CrimeAnalysisPage: React.FC<CrimeAnalysisPageProps> = ({
 
       {error && <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-md text-center" role="alert">{error}</div>}
       
-      {/* FIX: Add Array.isArray check to safely handle the result prop, resolving the 'unknown' type error. */}
+      {/* Fix: Add Array.isArray check to safely render results. This prevents runtime errors on '.length' and '.map' if 'result' is not an array. */}
       {Array.isArray(result) && result.length > 0 && (
          <div className="bg-gray-800 p-6 rounded-lg shadow-lg animate-fade-in">
            <h3 className="text-2xl font-bold text-teal-400 mb-4">Kết Quả Phân Tích</h3>
