@@ -101,15 +101,17 @@ export default async function handler(request: any, response: any) {
 
   } catch (error) {
     console.error("Error in /api/analyze:", error);
-    let errorMessage = "An internal server error occurred.";
+    
     if (error instanceof Error) {
-        // Check for specific Gemini API authentication errors
         if (error.message.includes('API key not valid')) {
-            return response.status(401).json({ error: 'The provided API key is not valid. Please check and try again.' });
+            return response.status(401).json({ error: 'API key được cung cấp không hợp lệ. Vui lòng kiểm tra lại.' });
         }
-        errorMessage = error.message;
+        if (error.message.toLowerCase().includes('quota')) {
+            return response.status(429).json({ error: 'Bạn đã vượt quá hạn ngạch sử dụng API. Vui lòng kiểm tra gói dịch vụ và thông tin thanh toán của bạn.' });
+        }
+        return response.status(500).json({ error: error.message });
     }
     
-    return response.status(500).json({ error: errorMessage });
+    return response.status(500).json({ error: 'Đã xảy ra lỗi không xác định phía máy chủ.' });
   }
 }

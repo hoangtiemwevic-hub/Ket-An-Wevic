@@ -29,16 +29,18 @@ export default async function handler(request: any, response: any) {
   } catch (error) {
     console.error("Error in /api/validate-key:", error);
     
-    // Provide a specific, user-friendly error message for invalid keys.
-    if (error instanceof Error && error.message.includes('API key not valid')) {
-        return response.status(401).json({ error: 'The provided API key is not valid. Please check and try again.' });
-    }
-    
-    // For other errors, return the actual error message from the API for better debugging.
     if (error instanceof Error) {
+        // Handle specific, common errors with user-friendly messages
+        if (error.message.includes('API key not valid')) {
+            return response.status(401).json({ error: 'API key được cung cấp không hợp lệ. Vui lòng kiểm tra lại.' });
+        }
+        if (error.message.toLowerCase().includes('quota')) {
+            return response.status(429).json({ error: 'Bạn đã vượt quá hạn ngạch sử dụng API. Vui lòng kiểm tra gói dịch vụ và thông tin thanh toán của bạn.' });
+        }
+        // For other errors, return the original message for debugging
         return response.status(500).json({ error: error.message });
     }
 
-    return response.status(500).json({ error: 'An unknown error occurred during key validation.' });
+    return response.status(500).json({ error: 'Đã xảy ra lỗi không xác định trong quá trình xác thực key.' });
   }
 }
