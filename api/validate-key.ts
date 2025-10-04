@@ -34,7 +34,11 @@ export default async function handler(request: any, response: any) {
         return response.status(401).json({ error: 'The provided API key is not valid. Please check and try again.' });
     }
     
-    // For other errors, return a more generic server error message.
-    return response.status(500).json({ error: 'An internal server error occurred during key validation.' });
+    // For other errors, return the actual error message from the API for better debugging.
+    if (error instanceof Error) {
+        return response.status(500).json({ error: error.message });
+    }
+
+    return response.status(500).json({ error: 'An unknown error occurred during key validation.' });
   }
 }
