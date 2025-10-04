@@ -1,17 +1,9 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Crime } from "../types";
 
 // This is a Vercel Serverless Function, which acts as a backend.
 // It securely handles the API key and communication with the Gemini API.
-
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  // This error will be logged on the server, not exposed to the client.
-  throw new Error("API_KEY environment variable is not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 // Using `any` for request and response types to avoid adding @vercel/node dependency
 // Vercel populates these with Node.js-like objects.
@@ -21,12 +13,17 @@ export default async function handler(request: any, response: any) {
   }
 
   try {
-    const { text } = request.body;
+    const { text, apiKey } = request.body;
 
     if (!text || typeof text !== 'string' || !text.trim()) {
       return response.status(400).json({ error: 'Input text is required.' });
     }
+    
+    if (!apiKey || typeof apiKey !== 'string') {
+        return response.status(401).json({ error: 'API key is required.' });
+    }
 
+    const ai = new GoogleGenAI({ apiKey });
     const model = 'gemini-2.5-flash';
 
     const systemInstruction = `
@@ -106,7 +103,11 @@ export default async function handler(request: any, response: any) {
     console.error("Error in /api/analyze:", error);
     let errorMessage = "An internal server error occurred.";
     if (error instanceof Error) {
-      errorMessage = error.message;
+        // Check for specific Gemini API authentication errors
+        if (error.message.includes('API key not valid')) {
+            return response.status(401).json({ error: 'The provided API key is not valid. Please check and try again.' });
+        }
+        errorMessage = error.message;
     }
     
     return response.status(500).json({ error: errorMessage });

@@ -1,13 +1,14 @@
+
 import { Crime } from "../types";
 
-export async function analyzeCrimeText(text: string): Promise<Crime[]> {
+export async function analyzeCrimeText(text: string, apiKey: string): Promise<Crime[]> {
   try {
     const response = await fetch('/api/analyze', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, apiKey }),
     });
 
     const data = await response.json();

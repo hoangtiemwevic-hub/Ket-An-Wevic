@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { analyzeCrimeText } from '../services/geminiService';
 import Spinner from './common/Spinner';
@@ -25,6 +26,7 @@ const formatCrimeText = (text: string): string => {
 };
 
 interface CrimeAnalysisPageProps {
+  apiKey: string;
   inputText: string;
   setInputText: (text: string) => void;
   result: Crime[];
@@ -39,7 +41,7 @@ interface CrimeAnalysisPageProps {
 }
 
 const CrimeAnalysisPage: React.FC<CrimeAnalysisPageProps> = ({
-  inputText, setInputText, result, setResult, error, setError, isLoading, setIsLoading, history, onHistoryAdd, onHistoryChange
+  apiKey, inputText, setInputText, result, setResult, error, setError, isLoading, setIsLoading, history, onHistoryAdd, onHistoryChange
 }) => {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -95,7 +97,7 @@ const CrimeAnalysisPage: React.FC<CrimeAnalysisPageProps> = ({
 
 
     try {
-      const analysisResult = await analyzeCrimeText(inputText);
+      const analysisResult = await analyzeCrimeText(inputText, apiKey);
       setResult(analysisResult);
       if (analysisResult.length > 0) {
         onHistoryAdd({ inputText, result: analysisResult });
@@ -113,7 +115,7 @@ const CrimeAnalysisPage: React.FC<CrimeAnalysisPageProps> = ({
         setProgress(0);
       }, 500);
     }
-  }, [inputText, setResult, setError, setIsLoading, onHistoryAdd]);
+  }, [inputText, apiKey, setResult, setError, setIsLoading, onHistoryAdd]);
   
   const handleCopy = useCallback((text: string, key: string) => {
     navigator.clipboard.writeText(text);

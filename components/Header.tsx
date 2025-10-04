@@ -5,6 +5,7 @@ import { Page } from '../types';
 interface HeaderProps {
   currentPage: Page;
   onPageChange: (page: Page) => void;
+  onLogout: () => void;
 }
 
 const NavButton: React.FC<{
@@ -26,7 +27,7 @@ const NavButton: React.FC<{
   );
 };
 
-const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => {
+const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange, onLogout }) => {
   return (
     <header className="bg-gray-800/50 backdrop-blur-sm sticky top-0 z-10 shadow-lg shadow-black/20">
       <nav className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex justify-between items-center">
@@ -49,6 +50,12 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => {
           >
             Chuyển Đổi Chữ
           </NavButton>
+          <button
+            onClick={onLogout}
+            className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500 bg-red-800/50 text-red-300 hover:bg-red-800 whitespace-nowrap"
+          >
+            Đăng xuất
+          </button>
         </div>
       </nav>
     </header>

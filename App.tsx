@@ -5,10 +5,12 @@ import { Page, HistoryEntry, Crime } from './types';
 import Header from './components/Header';
 import CrimeAnalysisPage from './components/CrimeAnalysisPage';
 import CaseConverterPage from './components/CaseConverterPage';
+import ApiKeyEntryPage from './components/ApiKeyEntryPage';
 
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>(Page.CrimeAnalysis);
+  const [apiKey, setApiKey] = useState<string | null>(null);
 
   // State for CrimeAnalysisPage
   const [crimeInput, setCrimeInput] = useState<string>('');
@@ -35,13 +37,22 @@ const App: React.FC = () => {
     ]);
   }, []);
 
+  const handleLogout = useCallback(() => {
+    setApiKey(null);
+  }, []);
+
+  if (!apiKey) {
+    return <ApiKeyEntryPage onApiKeySubmit={setApiKey} />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 font-sans">
-      <Header currentPage={currentPage} onPageChange={handlePageChange} />
+      <Header currentPage={currentPage} onPageChange={handlePageChange} onLogout={handleLogout} />
       <main className="p-4 sm:p-6 md:p-8">
         <div className="max-w-4xl mx-auto">
           {currentPage === Page.CrimeAnalysis && (
             <CrimeAnalysisPage 
+              apiKey={apiKey}
               inputText={crimeInput}
               setInputText={setCrimeInput}
               result={crimeResult}
