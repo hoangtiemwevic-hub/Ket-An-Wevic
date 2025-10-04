@@ -1,0 +1,5 @@
+{
+  "name": "Công Cụ Pháp Lý AI",
+  "description": "Một ứng dụng web hai chức năng: một trang phân tích các vụ án hình sự của Hoa Kỳ để liệt kê các tội danh bằng tiếng Anh và tiếng Việt bằng AI, và một trang khác để chuyển đổi văn bản thành chữ hoa.",
+  "requestFramePermissions": []
+}
